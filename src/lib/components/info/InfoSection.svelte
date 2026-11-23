@@ -1,17 +1,10 @@
 <script lang="ts">
   import MarkdownBody from "$lib/components/MarkdownBody.svelte";
-  import type { Accent, InfoSection } from "$lib/info/sections";
+  import type { InfoSection } from "$lib/info/sections";
 
   const HERO_IMAGE = "https://files.dsek.se/files/public/photos/hero2.webp";
 
-  const ACCENT_BG: Record<Accent, string> = {
-    rosa: "bg-rosa-background",
-    lila: "bg-lila-background",
-    pistachio: "bg-pistachio-400",
-  };
-
-  let { section, accent = "rosa" }: { section: InfoSection; accent?: Accent } =
-    $props();
+  let { section }: { section: InfoSection } = $props();
 
   // Image styles without an image fall back to a plain text block.
   const style = $derived(
@@ -52,7 +45,6 @@
   </header>
 {:else if style === "category"}
   <div class="mx-auto max-w-5xl px-4 pt-20 pb-2">
-    <!-- <div class="mb-3 h-1.5 w-10 rounded-full {ACCENT_BG[accent]}"></div> -->
     <h2 class="text-center text-3xl font-bold uppercase sm:text-4xl">
       {section.heading}
     </h2>

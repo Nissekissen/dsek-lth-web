@@ -10,13 +10,10 @@ export const SECTION_STYLES = [
 
 export type SectionStyle = (typeof SECTION_STYLES)[number];
 
-export type Accent = "rosa" | "lila" | "pistachio";
-
 export type InfoSection = {
   style: SectionStyle;
   heading?: string;
-  /** Markdown */
-  body?: string;
+  body?: string; // Markdown
   image?: string;
   imageAlt?: string;
 };
@@ -25,12 +22,7 @@ export type SectionBlock =
   | { kind: "standalone"; section: InfoSection }
   | { kind: "group"; sections: InfoSection[] };
 
-/**
- * Splits the flat, ordered section list into blocks for rendering. Hero and
- * footer sections are standalone. Every category starts a new group, which
- * holds the sections up to the next category. Sections before the first
- * category end up in a group of their own.
- */
+// Splits the sections into "blocks", where each block starts with a category if not hero or footer.
 export const groupSections = (sections: InfoSection[]): SectionBlock[] => {
   const blocks: SectionBlock[] = [];
   let current: InfoSection[] | null = null;

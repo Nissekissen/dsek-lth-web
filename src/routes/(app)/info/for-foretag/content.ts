@@ -1,6 +1,8 @@
 import { getFileUrl } from "$lib/files/client";
 import type { InfoSection } from "$lib/info/sections";
 
+// This page should not be here in the final version, it is only mock data for for-companies
+
 const photo = (name: string) =>
   getFileUrl(`minio/files/public/photos/${name}`) ?? undefined;
 
