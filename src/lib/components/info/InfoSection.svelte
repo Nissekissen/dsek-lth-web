@@ -29,7 +29,7 @@
     style:background-image="linear-gradient(to right, rgba(0,0,0,0.92),
     rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url({section.image ?? HERO_IMAGE})"
   >
-    <div class="mx-auto w-full max-w-5xl px-4 py-16">
+    <div class="mx-auto w-full max-w-6xl px-4 py-16">
       <h1
         class="max-w-[18ch] text-4xl leading-none font-bold uppercase sm:text-6xl lg:text-7xl"
       >
@@ -44,7 +44,7 @@
     </div>
   </header>
 {:else if style === "category"}
-  <div class="mx-auto max-w-5xl px-4 pt-20 pb-2">
+  <div class="mx-auto max-w-6xl px-4 pt-20 pb-2">
     <h2 class="text-center text-3xl font-bold uppercase sm:text-4xl">
       {section.heading}
     </h2>
@@ -54,7 +54,12 @@
   </div>
 {:else if style === "image-left" || style === "image-right"}
   <section
-    class="mx-auto grid max-w-5xl items-center gap-8 px-4 py-9 md:grid-cols-2 md:gap-12"
+    class={[
+      "mx-auto grid max-w-6xl items-center gap-8 px-4 py-9 md:gap-12",
+      style === "image-right"
+        ? "md:grid-cols-[3fr_2fr]"
+        : "md:grid-cols-[2fr_3fr]",
+    ]}
   >
     <div class={style === "image-right" ? "md:order-2" : ""}>
       {@render picture("aspect-4/3")}
@@ -65,10 +70,10 @@
     </div>
   </section>
 {:else if style === "image-center"}
-  <section class="mx-auto max-w-5xl px-4 py-10 text-center">
-    {@render picture("aspect-21/9")}
+  <section class="mx-auto max-w-6xl px-4 py-10">
+    {@render picture("mx-auto aspect-21/9 max-w-[62rem]")}
     <div class="mx-auto mt-6 max-w-prose">
-      {#if section.heading}<h3 class="mb-3">{section.heading}</h3>{/if}
+      {#if section.heading}<h3 class="mb-3 text-center">{section.heading}</h3>{/if}
       {#if section.body}<MarkdownBody body={section.body} />{/if}
     </div>
   </section>
@@ -86,7 +91,7 @@
     </div>
   </footer>
 {:else}
-  <section class="mx-auto w-fit max-w-5xl px-4 py-8">
+  <section class="mx-auto w-fit max-w-6xl px-4 py-8">
     {#if section.heading}
       <h3 class="mb-3 text-center">{section.heading}</h3>
     {/if}
