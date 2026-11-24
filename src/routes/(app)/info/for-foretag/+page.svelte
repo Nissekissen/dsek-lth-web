@@ -10,15 +10,15 @@
   import { getLocale } from "$paraglide/runtime";
   import { sectionsEn, sectionsSv } from "./content";
 
-  const initial = getLocale() === "sv" ? sectionsSv : sectionsEn;
+  const withIds = (list: typeof sectionsSv) =>
+    list.map((s) => ({ ...s, id: crypto.randomUUID() }));
+
+  const initial = withIds(getLocale() === "sv" ? sectionsSv : sectionsEn);
   let sections = $state(structuredClone(initial));
-  let saved = $state.raw(structuredClone(initial));
+  let saved = $state.raw(initial);
 
   const addSection = (after: number) =>
-    sections.splice(after + 1, 0, {
-      style: "text",
-      heading: "Nytt avsnitt",
-    });
+    sections.splice(after + 1, 0, { id: crypto.randomUUID(), style: "text" });
 
   const moveSection = (i: number, delta: -1 | 1) => {
     const a = sections[i];
@@ -58,8 +58,7 @@
       cancel();
       return;
     }
-    // TODO: move to Paraglide messages.
-    if (!confirm("Du har osparade ändringar. Vill du lämna sidan?")) cancel();
+    if (!confirm(m.info_edit_leave_confirm())) cancel();
   });
 </script>
 
@@ -93,7 +92,7 @@
           sections[index + 1]?.style === "footer"}
         onmove={(delta) => moveSection(index, delta)}
         ondelete={() => deleteSection(index)}
-        class="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100 has-data-[state=open]:opacity-100"
+        class="mt-2 mr-4 ml-auto w-fit md:pointer-events-none md:absolute md:top-2 md:right-2 md:z-10 md:m-0 md:opacity-0 md:transition-opacity md:group-hover:pointer-events-auto md:group-hover:opacity-100 md:focus-within:pointer-events-auto md:focus-within:opacity-100 md:has-data-[state=open]:pointer-events-auto md:has-data-[state=open]:opacity-100"
       />
     {/if}
   </div>
@@ -102,7 +101,7 @@
   {/if}
 {/snippet}
 
-{#each blocks as block, i (i)}
+{#each blocks as block, i (block.kind === "standalone" ? block.section.id : (block.sections[0]?.section.id ?? i))}
   {#if block.kind === "standalone"}
     {@render row(block.index)}
   {:else}
@@ -110,7 +109,7 @@
       class="border-b last:border-b-0"
       class:bg-muted-background={block.index % 2 === 1}
     >
-      {#each block.sections as { index } (index)}
+      {#each block.sections as { section, index } (section.id)}
         {@render row(index)}
       {/each}
     </div>

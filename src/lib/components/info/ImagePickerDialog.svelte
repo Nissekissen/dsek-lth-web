@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as m from "$paraglide/messages";
   import FileUpload from "$lib/components/FileUpload.svelte";
   import { Button } from "$lib/components/ui/button";
   import * as Dialog from "$lib/components/ui/dialog";
@@ -10,7 +11,7 @@
     image = $bindable(),
     imageAlt = $bindable(),
     showAlt = true,
-    removeLabel = "Ta bort bild",
+    removeLabel = m.info_edit_image_remove(),
   }: {
     open?: boolean;
     image?: string;
@@ -47,9 +48,9 @@
 <Dialog.Root bind:open>
   <Dialog.Content>
     <Dialog.Header>
-      <Dialog.Title>Välj bild</Dialog.Title>
+      <Dialog.Title>{m.info_edit_image_title()}</Dialog.Title>
       <Dialog.Description>
-        Ladda upp en fil eller ange en länk till en bild.
+        {m.info_edit_image_description()}
       </Dialog.Description>
     </Dialog.Header>
 
@@ -57,11 +58,11 @@
 
     {#if showAlt}
       <div class="flex flex-col gap-2">
-        <Label for="image-alt">Alternativ text</Label>
+        <Label for="image-alt">{m.info_edit_image_alt()}</Label>
         <Input
           id="image-alt"
           bind:value={imageAlt}
-          placeholder="Beskriv bilden för den som inte kan se den"
+          placeholder={m.info_edit_image_alt_placeholder()}
         />
       </div>
     {/if}

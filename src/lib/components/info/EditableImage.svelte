@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as m from "$paraglide/messages";
   import ImagePickerDialog from "$lib/components/info/ImagePickerDialog.svelte";
   import { cn } from "$lib/utils";
 
@@ -42,7 +43,7 @@
           : "text-muted-foreground hover:text-foreground",
       )}
     >
-      {image ? "Byt bild" : "Lägg till bild"}
+      {image ? m.info_edit_image_change() : m.info_edit_image_add()}
     </button>
   {/if}
 </div>

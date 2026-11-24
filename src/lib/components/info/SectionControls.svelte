@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as m from "$paraglide/messages";
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import * as Select from "$lib/components/ui/select";
   import { Button } from "$lib/components/ui/button";
@@ -11,15 +12,14 @@
     type SectionStyle,
   } from "$lib/info/sections";
 
-  // TODO: move to Paraglide messages together with the other strings.
-  const STYLE_LABELS: Record<SectionStyle, string> = {
-    hero: "Toppsektion",
-    category: "Kategori",
-    "image-left": "Bild till vänster",
-    "image-right": "Bild till höger",
-    "image-center": "Bild i mitten",
-    text: "Text",
-    footer: "Sidfot",
+  const STYLE_LABELS: Record<SectionStyle, () => string> = {
+    hero: m.info_edit_style_hero,
+    category: m.info_edit_style_category,
+    "image-left": m.info_edit_style_image_left,
+    "image-right": m.info_edit_style_image_right,
+    "image-center": m.info_edit_style_image_center,
+    text: m.info_edit_style_text,
+    footer: m.info_edit_style_footer,
   };
 
   let {
@@ -56,11 +56,11 @@
     onValueChange={(value) => (section.style = value as SectionStyle)}
   >
     <Select.Trigger size="sm" class="w-36">
-      {STYLE_LABELS[section.style]}
+      {STYLE_LABELS[section.style]()}
     </Select.Trigger>
     <Select.Content>
       {#each SECTION_STYLES as style (style)}
-        <Select.Item value={style}>{STYLE_LABELS[style]}</Select.Item>
+        <Select.Item value={style}>{STYLE_LABELS[style]()}</Select.Item>
       {/each}
     </Select.Content>
   </Select.Root>
@@ -69,7 +69,7 @@
     <Button
       variant="ghost"
       size="icon-sm"
-      aria-label="Flytta upp"
+      aria-label={m.info_edit_move_up()}
       disabled={first}
       onclick={() => onmove(-1)}
     >
@@ -78,7 +78,7 @@
     <Button
       variant="ghost"
       size="icon-sm"
-      aria-label="Flytta ner"
+      aria-label={m.info_edit_move_down()}
       disabled={last}
       onclick={() => onmove(1)}
     >
@@ -92,7 +92,7 @@
             {...props}
             variant="ghost"
             size="icon-sm"
-            aria-label="Ta bort avsnitt"
+            aria-label={m.info_edit_delete_section()}
           >
             <Trash2 />
           </Button>
@@ -100,19 +100,18 @@
       </AlertDialog.Trigger>
       <AlertDialog.Content>
         <AlertDialog.Header>
-          <AlertDialog.Title>Ta bort avsnitt?</AlertDialog.Title>
+          <AlertDialog.Title>{m.info_edit_delete_title()}</AlertDialog.Title>
           <AlertDialog.Description>
-            Avsnittet tas bort från sidan. Du kan ångra det med Avbryt innan du
-            sparar.
+            {m.info_edit_delete_description()}
           </AlertDialog.Description>
         </AlertDialog.Header>
         <AlertDialog.Footer>
-          <AlertDialog.Cancel>Avbryt</AlertDialog.Cancel>
+          <AlertDialog.Cancel>{m.cancel()}</AlertDialog.Cancel>
           <AlertDialog.Action
             onclick={() => {
               deleteOpen = false;
               ondelete();
-            }}>Ta bort</AlertDialog.Action
+            }}>{m.info_edit_delete_confirm()}</AlertDialog.Action
           >
         </AlertDialog.Footer>
       </AlertDialog.Content>

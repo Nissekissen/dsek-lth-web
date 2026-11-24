@@ -11,6 +11,8 @@ export const SECTION_STYLES = [
 export type SectionStyle = (typeof SECTION_STYLES)[number];
 
 export type InfoSection = {
+  /** Stable id so the editor can key components by section, not position. */
+  id?: string;
   style: SectionStyle;
   heading?: string;
   body?: string; // Markdown

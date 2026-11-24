@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as m from "$paraglide/messages";
   let { onclick }: { onclick: () => void } = $props();
 </script>
 
@@ -10,7 +11,7 @@
   <span
     class="group-hover:border-rosa-background flex-1 border-t border-dashed group-hover:border-solid"
   ></span>
-  + Lägg till avsnitt
+  + {m.info_edit_add_section()}
   <span
     class="group-hover:border-rosa-background flex-1 border-t border-dashed group-hover:border-solid"
   ></span>

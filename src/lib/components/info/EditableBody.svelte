@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as m from "$paraglide/messages";
   import MarkdownBody from "$lib/components/MarkdownBody.svelte";
   import Editor from "$lib/components/Editor.svelte";
   import { Switch } from "$lib/components/ui/switch";
@@ -36,9 +37,9 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <Switch id="preview-switch" bind:checked={preview} />
-          <Label for="preview-switch">Förhandsgranska</Label>
+          <Label for="preview-switch">{m.info_edit_preview()}</Label>
         </div>
-        <Button onclick={() => (open = false)}>Klar</Button>
+        <Button onclick={() => (open = false)}>{m.info_edit_done()}</Button>
       </div>
     </div>
   {:else}
@@ -51,7 +52,7 @@
         <MarkdownBody body={value} class={klass} />
       {:else}
         <span class="text-muted-foreground block py-2 italic"
-          >Lägg till text</span
+          >{m.info_edit_add_text()}</span
         >
       {/if}
     </button>

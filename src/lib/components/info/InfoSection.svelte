@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as m from "$paraglide/messages";
   import EditableText from "$lib/components/info/EditableText.svelte";
   import EditableBody from "$lib/components/info/EditableBody.svelte";
   import EditableImage from "$lib/components/info/EditableImage.svelte";
@@ -42,11 +43,7 @@
       <h1
         class="max-w-[18ch] text-4xl leading-none font-bold uppercase sm:text-6xl lg:text-7xl"
       >
-        <EditableText
-          bind:value={section.heading}
-          {editing}
-          placeholder="Skriv något"
-        />
+        <EditableText bind:value={section.heading} {editing} />
       </h1>
       <EditableBody
         bind:value={section.body}
@@ -60,24 +57,20 @@
         class="absolute right-4 bottom-4"
         onclick={() => (heroPickerOpen = true)}
       >
-        Byt bakgrundsbild
+        {m.info_edit_hero_change()}
       </Button>
       <ImagePickerDialog
         bind:open={heroPickerOpen}
         bind:image={section.image}
         showAlt={false}
-        removeLabel="Återställ standardbild"
+        removeLabel={m.info_edit_hero_reset()}
       />
     {/if}
   </header>
 {:else if style === "category"}
   <div class="mx-auto max-w-6xl px-4 pt-20 pb-2">
     <h2 class="text-center text-3xl font-bold uppercase sm:text-4xl">
-      <EditableText
-        bind:value={section.heading}
-        {editing}
-        placeholder="Skriv något"
-      />
+      <EditableText bind:value={section.heading} {editing} />
     </h2>
     <!-- <EditableBody bind:value={section.body} {editing} class="mt-4" /> -->
   </div>
@@ -96,11 +89,7 @@
     <div>
       {#if section.heading || editing}
         <h3 class="mb-3">
-          <EditableText
-            bind:value={section.heading}
-            {editing}
-            placeholder="Skriv något"
-          />
+          <EditableText bind:value={section.heading} {editing} />
         </h3>
       {/if}
       <EditableBody bind:value={section.body} {editing} />
@@ -112,11 +101,7 @@
     <div class="mx-auto mt-6 max-w-prose">
       {#if section.heading || editing}
         <h3 class="mb-3 text-center">
-          <EditableText
-            bind:value={section.heading}
-            {editing}
-            placeholder="Skriv något"
-          />
+          <EditableText bind:value={section.heading} {editing} />
         </h3>
       {/if}
       <EditableBody bind:value={section.body} {editing} />
@@ -127,11 +112,7 @@
     <div class="mx-auto max-w-prose">
       {#if section.heading || editing}
         <h2 class="text-3xl font-bold uppercase sm:text-4xl">
-          <EditableText
-            bind:value={section.heading}
-            {editing}
-            placeholder="Skriv något"
-          />
+          <EditableText bind:value={section.heading} {editing} />
         </h2>
       {/if}
       <EditableBody bind:value={section.body} {editing} class="mt-4" />
@@ -141,11 +122,7 @@
   <section class="mx-auto w-fit max-w-6xl px-4 py-8">
     {#if section.heading || editing}
       <h3 class="mb-3 text-center">
-        <EditableText
-          bind:value={section.heading}
-          {editing}
-          placeholder="Skriv något"
-        />
+        <EditableText bind:value={section.heading} {editing} />
       </h3>
     {/if}
     <EditableBody bind:value={section.body} {editing} />
