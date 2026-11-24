@@ -2,6 +2,7 @@
   import InfoSection from "$lib/components/info/InfoSection.svelte";
   import SetPageTitle from "$lib/components/nav/SetPageTitle.svelte";
   import EditBar from "$lib/components/info/EditBar.svelte";
+  import { beforeNavigate } from "$app/navigation";
   import AddSection from "$lib/components/info/AddSection.svelte";
   import SectionControls from "$lib/components/info/SectionControls.svelte";
   import { groupSections } from "$lib/info/sections";
@@ -48,6 +49,18 @@
   });
 
   let editing = $state(false);
+
+  // Warn before leaving with unsaved edits. For a tab close or reload,
+  // cancel() makes the browser show its own confirmation.
+  beforeNavigate(({ cancel, willUnload }) => {
+    if (!editing || !dirty) return;
+    if (willUnload) {
+      cancel();
+      return;
+    }
+    // TODO: move to Paraglide messages.
+    if (!confirm("Du har osparade ändringar. Vill du lämna sidan?")) cancel();
+  });
 </script>
 
 <SetPageTitle title={m.nav_for_companies()} />

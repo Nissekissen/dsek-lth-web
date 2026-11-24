@@ -2,6 +2,8 @@
   import EditableText from "$lib/components/info/EditableText.svelte";
   import EditableBody from "$lib/components/info/EditableBody.svelte";
   import EditableImage from "$lib/components/info/EditableImage.svelte";
+  import ImagePickerDialog from "$lib/components/info/ImagePickerDialog.svelte";
+  import { Button } from "$lib/components/ui/button";
   import type { InfoSection } from "$lib/info/sections";
 
   const HERO_IMAGE = "https://files.dsek.se/files/public/photos/hero2.webp";
@@ -10,6 +12,8 @@
     section = $bindable(),
     editing = false,
   }: { section: InfoSection; editing: boolean } = $props();
+
+  let heroPickerOpen = $state(false);
 
   // Image styles without an image fall back to a plain text block.
   const style = $derived(
@@ -30,9 +34,9 @@
 
 {#if style === "hero"}
   <header
-    class="flex min-h-[70vh] items-center bg-cover bg-center text-white"
+    class="relative flex min-h-[70vh] items-center bg-cover bg-center text-white"
     style:background-image="linear-gradient(to right, rgba(0,0,0,0.92),
-    rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url({section.image ?? HERO_IMAGE})"
+    rgba(0,0,0,0.7), rgba(0,0,0,0.2)), url('{section.image ?? HERO_IMAGE}')"
   >
     <div class="mx-auto w-full max-w-6xl px-4 py-16">
       <h1
@@ -50,6 +54,21 @@
         class="prose-invert mt-6 max-w-prose text-lg text-white/90"
       />
     </div>
+    {#if editing}
+      <Button
+        variant="outline"
+        class="absolute right-4 bottom-4"
+        onclick={() => (heroPickerOpen = true)}
+      >
+        Byt bakgrundsbild
+      </Button>
+      <ImagePickerDialog
+        bind:open={heroPickerOpen}
+        bind:image={section.image}
+        showAlt={false}
+        removeLabel="Återställ standardbild"
+      />
+    {/if}
   </header>
 {:else if style === "category"}
   <div class="mx-auto max-w-6xl px-4 pt-20 pb-2">
