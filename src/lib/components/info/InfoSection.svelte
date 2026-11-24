@@ -1,10 +1,12 @@
 <script lang="ts">
   import MarkdownBody from "$lib/components/MarkdownBody.svelte";
+  import EditableText from "$lib/components/info/EditableText.svelte";
+  import EditableBody from "$lib/components/info/EditableBody.svelte";
   import type { InfoSection } from "$lib/info/sections";
 
   const HERO_IMAGE = "https://files.dsek.se/files/public/photos/hero2.webp";
 
-  let { section }: { section: InfoSection } = $props();
+  let { section = $bindable(), editing = false }: { section: InfoSection; editing: boolean } = $props();
 
   // Image styles without an image fall back to a plain text block.
   const style = $derived(
@@ -33,24 +35,21 @@
       <h1
         class="max-w-[18ch] text-4xl leading-none font-bold uppercase sm:text-6xl lg:text-7xl"
       >
-        {section.heading}
+        <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
       </h1>
-      {#if section.body}
-        <MarkdownBody
-          body={section.body}
-          class="prose-invert mt-6 max-w-prose text-lg text-white/90"
-        />
-      {/if}
+      <EditableBody
+        bind:value={section.body}
+        {editing}
+        class="prose-invert mt-6 max-w-prose text-lg text-white/90"
+      />
     </div>
   </header>
 {:else if style === "category"}
   <div class="mx-auto max-w-6xl px-4 pt-20 pb-2">
     <h2 class="text-center text-3xl font-bold uppercase sm:text-4xl">
-      {section.heading}
+      <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
     </h2>
-    {#if section.body}
-      <MarkdownBody body={section.body} class="mt-4" />
-    {/if}
+    <!-- <EditableBody bind:value={section.body} {editing} class="mt-4" /> -->
   </div>
 {:else if style === "image-left" || style === "image-right"}
   <section
@@ -65,36 +64,44 @@
       {@render picture("aspect-4/3")}
     </div>
     <div>
-      {#if section.heading}<h3 class="mb-3">{section.heading}</h3>{/if}
-      {#if section.body}<MarkdownBody body={section.body} />{/if}
+      {#if section.heading || editing}
+        <h3 class="mb-3">
+          <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+        </h3>
+      {/if}
+      <EditableBody bind:value={section.body} {editing} />
     </div>
   </section>
 {:else if style === "image-center"}
   <section class="mx-auto max-w-6xl px-4 py-10">
     {@render picture("mx-auto aspect-21/9 max-w-[62rem]")}
     <div class="mx-auto mt-6 max-w-prose">
-      {#if section.heading}<h3 class="mb-3 text-center">{section.heading}</h3>{/if}
-      {#if section.body}<MarkdownBody body={section.body} />{/if}
+      {#if section.heading || editing}
+        <h3 class="mb-3 text-center">
+          <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+        </h3>
+      {/if}
+      <EditableBody bind:value={section.body} {editing} />
     </div>
   </section>
 {:else if style === "footer"}
   <footer class="mt-20 px-4 py-16 text-center">
     <div class="mx-auto max-w-prose">
-      {#if section.heading}
+      {#if section.heading || editing}
         <h2 class="text-3xl font-bold uppercase sm:text-4xl">
-          {section.heading}
+          <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
         </h2>
       {/if}
-      {#if section.body}
-        <MarkdownBody body={section.body} class="mt-4" />
-      {/if}
+      <EditableBody bind:value={section.body} {editing} class="mt-4" />
     </div>
   </footer>
 {:else}
   <section class="mx-auto w-fit max-w-6xl px-4 py-8">
-    {#if section.heading}
-      <h3 class="mb-3 text-center">{section.heading}</h3>
+    {#if section.heading || editing}
+      <h3 class="mb-3 text-center">
+        <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+      </h3>
     {/if}
-    {#if section.body}<MarkdownBody body={section.body} />{/if}
+    <EditableBody bind:value={section.body} {editing} />
   </section>
 {/if}
