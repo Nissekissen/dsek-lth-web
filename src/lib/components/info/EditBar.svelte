@@ -16,8 +16,12 @@
 </script>
 
 {#if editing}
-  <div class="bg-background fixed right-4 bottom-4 z-50 flex items-center gap-3 rounded-xl border p-2 shadow-lg">
-    <span class="text-muted-foreground px-2 text-sm">{dirty ? "Osparade ändringar" : "Redigerar"}</span>
+  <div
+    class="bg-background fixed right-4 bottom-4 z-50 flex items-center gap-3 rounded-xl border p-2 shadow-lg"
+  >
+    <span class="text-muted-foreground px-2 text-sm"
+      >{dirty ? "Osparade ändringar" : "Redigerar"}</span
+    >
     <Button variant="outline" onclick={ondiscard}>Avbryt</Button>
     <Button onclick={onsave} disabled={!dirty}>Spara</Button>
   </div>

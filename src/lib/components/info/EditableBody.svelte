@@ -18,14 +18,16 @@
   let open = $state(false);
   let preview = $state(false);
 
-  $effect(() => { if (!editing) open = false; });
+  $effect(() => {
+    if (!editing) open = false;
+  });
 </script>
 
 {#if editing}
   {#if open}
     <div class="flex flex-col gap-2">
       <div class={["grid gap-4", preview && "md:grid-cols-2"]}>
-        <Editor bind:value />
+        <Editor bind:value={() => value ?? "", (v) => (value = v)} />
         {#if preview}
           <MarkdownBody body={value ?? ""} preview />
         {/if}
@@ -42,9 +44,16 @@
   {:else}
     <button
       type="button"
-      class="block w-full cursor-pointer rounded text-left outline outline-dashed outline-rosa-background/50 hover:bg-rosa-background/10"
-      onclick={() => (open = true)}>
-      {#if value}<MarkdownBody body={value} class={klass} />{/if}
+      class="outline-rosa-background/50 hover:bg-rosa-background/10 block w-full cursor-pointer rounded text-left outline outline-dashed"
+      onclick={() => (open = true)}
+    >
+      {#if value}
+        <MarkdownBody body={value} class={klass} />
+      {:else}
+        <span class="text-muted-foreground block py-2 italic"
+          >Lägg till text</span
+        >
+      {/if}
     </button>
   {/if}
 {:else}

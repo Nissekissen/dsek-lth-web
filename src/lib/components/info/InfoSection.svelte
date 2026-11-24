@@ -1,27 +1,30 @@
 <script lang="ts">
-  import MarkdownBody from "$lib/components/MarkdownBody.svelte";
   import EditableText from "$lib/components/info/EditableText.svelte";
   import EditableBody from "$lib/components/info/EditableBody.svelte";
+  import EditableImage from "$lib/components/info/EditableImage.svelte";
   import type { InfoSection } from "$lib/info/sections";
 
   const HERO_IMAGE = "https://files.dsek.se/files/public/photos/hero2.webp";
 
-  let { section = $bindable(), editing = false }: { section: InfoSection; editing: boolean } = $props();
+  let {
+    section = $bindable(),
+    editing = false,
+  }: { section: InfoSection; editing: boolean } = $props();
 
   // Image styles without an image fall back to a plain text block.
   const style = $derived(
-    section.style.startsWith("image-") && !section.image
+    !editing && section.style.startsWith("image-") && !section.image
       ? "text"
       : section.style,
   );
 </script>
 
 {#snippet picture(klass: string)}
-  <img
-    src={section.image}
-    alt={section.imageAlt ?? ""}
-    loading="lazy"
-    class="bg-muted w-full rounded-lg object-cover shadow-lg {klass}"
+  <EditableImage
+    bind:image={section.image}
+    bind:imageAlt={section.imageAlt}
+    {editing}
+    class={klass}
   />
 {/snippet}
 
@@ -35,7 +38,11 @@
       <h1
         class="max-w-[18ch] text-4xl leading-none font-bold uppercase sm:text-6xl lg:text-7xl"
       >
-        <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+        <EditableText
+          bind:value={section.heading}
+          {editing}
+          placeholder="Skriv något"
+        />
       </h1>
       <EditableBody
         bind:value={section.body}
@@ -47,7 +54,11 @@
 {:else if style === "category"}
   <div class="mx-auto max-w-6xl px-4 pt-20 pb-2">
     <h2 class="text-center text-3xl font-bold uppercase sm:text-4xl">
-      <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+      <EditableText
+        bind:value={section.heading}
+        {editing}
+        placeholder="Skriv något"
+      />
     </h2>
     <!-- <EditableBody bind:value={section.body} {editing} class="mt-4" /> -->
   </div>
@@ -66,7 +77,11 @@
     <div>
       {#if section.heading || editing}
         <h3 class="mb-3">
-          <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+          <EditableText
+            bind:value={section.heading}
+            {editing}
+            placeholder="Skriv något"
+          />
         </h3>
       {/if}
       <EditableBody bind:value={section.body} {editing} />
@@ -78,7 +93,11 @@
     <div class="mx-auto mt-6 max-w-prose">
       {#if section.heading || editing}
         <h3 class="mb-3 text-center">
-          <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+          <EditableText
+            bind:value={section.heading}
+            {editing}
+            placeholder="Skriv något"
+          />
         </h3>
       {/if}
       <EditableBody bind:value={section.body} {editing} />
@@ -89,7 +108,11 @@
     <div class="mx-auto max-w-prose">
       {#if section.heading || editing}
         <h2 class="text-3xl font-bold uppercase sm:text-4xl">
-          <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+          <EditableText
+            bind:value={section.heading}
+            {editing}
+            placeholder="Skriv något"
+          />
         </h2>
       {/if}
       <EditableBody bind:value={section.body} {editing} class="mt-4" />
@@ -99,7 +122,11 @@
   <section class="mx-auto w-fit max-w-6xl px-4 py-8">
     {#if section.heading || editing}
       <h3 class="mb-3 text-center">
-        <EditableText bind:value={section.heading} {editing} placeholder="Skriv något" />
+        <EditableText
+          bind:value={section.heading}
+          {editing}
+          placeholder="Skriv något"
+        />
       </h3>
     {/if}
     <EditableBody bind:value={section.body} {editing} />

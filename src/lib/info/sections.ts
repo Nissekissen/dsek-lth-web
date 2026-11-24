@@ -19,13 +19,13 @@ export type InfoSection = {
 };
 
 export type SectionBlock =
-  | { kind: "standalone"; section: InfoSection, index: number }
-  | { kind: "group"; sections: { section: InfoSection, index: number}[] };
+  | { kind: "standalone"; section: InfoSection; index: number }
+  | { kind: "group"; sections: Array<{ section: InfoSection; index: number }> };
 
 // Splits the sections into "blocks", where each block starts with a category if not hero or footer.
 export const groupSections = (sections: InfoSection[]): SectionBlock[] => {
   const blocks: SectionBlock[] = [];
-  let current: { section: InfoSection, index: number}[] | null = null;
+  let current: Array<{ section: InfoSection; index: number }> | null = null;
   for (const [index, section] of sections.entries()) {
     if (section.style === "hero" || section.style === "footer") {
       current = null;
