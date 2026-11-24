@@ -8,11 +8,14 @@
     imageAlt = $bindable(),
     editing = false,
     class: klass,
+    placeholderClass,
   }: {
     image?: string;
     imageAlt?: string;
     editing?: boolean;
     class?: string;
+    /** Only used while there is no image, since an image sets its own height. */
+    placeholderClass?: string;
   } = $props();
 
   let open = $state(false);
@@ -24,11 +27,14 @@
       src={image}
       alt={imageAlt ?? ""}
       loading="lazy"
-      class="bg-muted size-full rounded-lg object-cover shadow-lg"
+      class="bg-muted h-auto w-full rounded-lg shadow-lg"
     />
   {:else}
     <div
-      class="bg-muted size-full rounded-lg border-2 border-dashed shadow-lg"
+      class={cn(
+        "bg-muted size-full rounded-lg border-2 border-dashed shadow-lg",
+        placeholderClass,
+      )}
     ></div>
   {/if}
 

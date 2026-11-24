@@ -43,12 +43,13 @@
   );
 </script>
 
-{#snippet picture(klass: string)}
+{#snippet picture(klass: string, placeholderClass: string)}
   <EditableImage
     bind:image={section.image}
     bind:imageAlt={getAlt, setAlt}
     {editing}
     class={klass}
+    {placeholderClass}
   />
 {/snippet}
 
@@ -103,7 +104,7 @@
     ]}
   >
     <div class={style === "image-right" ? "md:order-2" : ""}>
-      {@render picture("aspect-4/3")}
+      {@render picture("", "aspect-4/3")}
     </div>
     <div>
       {#if getHeading() || editing}
@@ -116,7 +117,7 @@
   </section>
 {:else if style === "image-center"}
   <section class="mx-auto max-w-6xl px-4 py-10">
-    {@render picture("mx-auto aspect-21/9 max-w-[62rem]")}
+    {@render picture("mx-auto max-w-[62rem]", "aspect-21/9")}
     <div class="mx-auto mt-6 max-w-prose">
       {#if getHeading() || editing}
         <h3 class="mb-3 text-center">
