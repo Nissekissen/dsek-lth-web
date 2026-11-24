@@ -5,14 +5,33 @@
   import EditableImage from "$lib/components/info/EditableImage.svelte";
   import ImagePickerDialog from "$lib/components/info/ImagePickerDialog.svelte";
   import { Button } from "$lib/components/ui/button";
-  import type { InfoSection } from "$lib/info/sections";
+  import {
+    readSectionText,
+    writeSectionText,
+    type InfoLang,
+    type InfoSection,
+    type SectionTextField,
+  } from "$lib/info/sections";
 
   const HERO_IMAGE = "https://files.dsek.se/files/public/photos/hero2.webp";
 
   let {
     section = $bindable(),
+    lang,
     editing = false,
-  }: { section: InfoSection; editing: boolean } = $props();
+  }: { section: InfoSection; lang: InfoLang; editing: boolean } = $props();
+
+  // The text fields are stored per language, the bindings pick the right one.
+  const read = (field: SectionTextField) =>
+    readSectionText(section, field, lang, editing);
+  const write = (field: SectionTextField, value: string | undefined) =>
+    writeSectionText(section, field, lang, value);
+  const getHeading = () => read("heading");
+  const setHeading = (value: string | undefined) => write("heading", value);
+  const getBody = () => read("body");
+  const setBody = (value: string | undefined) => write("body", value);
+  const getAlt = () => read("imageAlt");
+  const setAlt = (value: string | undefined) => write("imageAlt", value);
 
   let heroPickerOpen = $state(false);
 
@@ -27,7 +46,7 @@
 {#snippet picture(klass: string)}
   <EditableImage
     bind:image={section.image}
-    bind:imageAlt={section.imageAlt}
+    bind:imageAlt={getAlt, setAlt}
     {editing}
     class={klass}
   />
@@ -43,10 +62,10 @@
       <h1
         class="max-w-[18ch] text-4xl leading-none font-bold uppercase sm:text-6xl lg:text-7xl"
       >
-        <EditableText bind:value={section.heading} {editing} />
+        <EditableText bind:value={getHeading, setHeading} {editing} />
       </h1>
       <EditableBody
-        bind:value={section.body}
+        bind:value={getBody, setBody}
         {editing}
         class="prose-invert mt-6 max-w-prose text-lg text-white/90"
       />
@@ -70,9 +89,9 @@
 {:else if style === "category"}
   <div class="mx-auto max-w-6xl px-4 pt-20 pb-2">
     <h2 class="text-center text-3xl font-bold uppercase sm:text-4xl">
-      <EditableText bind:value={section.heading} {editing} />
+      <EditableText bind:value={getHeading, setHeading} {editing} />
     </h2>
-    <!-- <EditableBody bind:value={section.body} {editing} class="mt-4" /> -->
+    <!-- <EditableBody bind:value={getBody, setBody} {editing} class="mt-4" /> -->
   </div>
 {:else if style === "image-left" || style === "image-right"}
   <section
@@ -87,44 +106,44 @@
       {@render picture("aspect-4/3")}
     </div>
     <div>
-      {#if section.heading || editing}
+      {#if getHeading() || editing}
         <h3 class="mb-3">
-          <EditableText bind:value={section.heading} {editing} />
+          <EditableText bind:value={getHeading, setHeading} {editing} />
         </h3>
       {/if}
-      <EditableBody bind:value={section.body} {editing} />
+      <EditableBody bind:value={getBody, setBody} {editing} />
     </div>
   </section>
 {:else if style === "image-center"}
   <section class="mx-auto max-w-6xl px-4 py-10">
     {@render picture("mx-auto aspect-21/9 max-w-[62rem]")}
     <div class="mx-auto mt-6 max-w-prose">
-      {#if section.heading || editing}
+      {#if getHeading() || editing}
         <h3 class="mb-3 text-center">
-          <EditableText bind:value={section.heading} {editing} />
+          <EditableText bind:value={getHeading, setHeading} {editing} />
         </h3>
       {/if}
-      <EditableBody bind:value={section.body} {editing} />
+      <EditableBody bind:value={getBody, setBody} {editing} />
     </div>
   </section>
 {:else if style === "footer"}
   <footer class="mt-20 px-4 py-16 text-center">
     <div class="mx-auto max-w-prose">
-      {#if section.heading || editing}
+      {#if getHeading() || editing}
         <h2 class="text-3xl font-bold uppercase sm:text-4xl">
-          <EditableText bind:value={section.heading} {editing} />
+          <EditableText bind:value={getHeading, setHeading} {editing} />
         </h2>
       {/if}
-      <EditableBody bind:value={section.body} {editing} class="mt-4" />
+      <EditableBody bind:value={getBody, setBody} {editing} class="mt-4" />
     </div>
   </footer>
 {:else}
   <section class="mx-auto w-fit max-w-6xl px-4 py-8">
-    {#if section.heading || editing}
+    {#if getHeading() || editing}
       <h3 class="mb-3 text-center">
-        <EditableText bind:value={section.heading} {editing} />
+        <EditableText bind:value={getHeading, setHeading} {editing} />
       </h3>
     {/if}
-    <EditableBody bind:value={section.body} {editing} />
+    <EditableBody bind:value={getBody, setBody} {editing} />
   </section>
 {/if}

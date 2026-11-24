@@ -64,6 +64,7 @@ const apiNames = {
   MARKDOWN: {
     ...crud("markdown"),
   },
+  INFO_PAGE: crud("info:page"),
   MEMBER: {
     ...crud("core:member"),
     SEE_STABEN: "member:see_staben",

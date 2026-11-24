@@ -5,6 +5,7 @@
   import * as Dialog from "$lib/components/ui/dialog";
   import { Input } from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
+  import { toast } from "$lib/stores/toast";
 
   let {
     open = $bindable(false),
@@ -21,22 +22,33 @@
   } = $props();
 
   let files = $state<FileList | undefined>();
+  let uploading = $state(false);
 
   // FileUpload fills `files` for the file input, drops and the URL dialog.
-  // Turn the picked file into a data URL for now. Uploading it to storage
-  // happens on the server once the page can be saved for real.
+  // The file is uploaded right away so the draft only ever holds a url.
   $effect(() => {
     const file = files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") image = reader.result;
-      open = false;
-    };
-    reader.readAsDataURL(file);
     // Clear the input so the same file can be picked again.
     files = new DataTransfer().files;
+    void upload(file);
   });
+
+  const upload = async (file: File) => {
+    uploading = true;
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/info/upload", { method: "POST", body });
+      if (!res.ok) throw new Error(await res.text());
+      image = (await res.json()).url;
+      open = false;
+    } catch {
+      toast(m.info_edit_upload_failed(), "error");
+    } finally {
+      uploading = false;
+    }
+  };
 
   const removeImage = () => {
     image = undefined;
@@ -54,7 +66,7 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <FileUpload bind:files accept="image/*" />
+    <FileUpload bind:files accept="image/*" disabled={uploading} />
 
     {#if showAlt}
       <div class="flex flex-col gap-2">

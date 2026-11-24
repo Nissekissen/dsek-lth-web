@@ -9,8 +9,6 @@
   import { Input } from "$lib/components/ui/input/index.js";
   import { Label } from "$lib/components/ui/label/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
-  import * as ButtonGroup from "$lib/components/ui/button-group/index.js";
-  import Editor from "$lib/components/Editor.svelte";
   import { Spinner } from "$lib/components/ui/spinner";
   import SetPageTitle from "$lib/components/nav/SetPageTitle.svelte";
   import * as m from "$paraglide/messages.js";
@@ -22,8 +20,6 @@
   const { form, errors, enhance, delayed } = superForm(data.form, {
     delayMs: 300,
   });
-
-  let activeTab = $state<"sv" | "en">("sv");
 </script>
 
 <SetPageTitle title={m.admin_info_createNewInfoPage()} />
@@ -36,74 +32,46 @@
       >
     </CardHeader>
     <CardContent class="flex flex-col gap-6 pt-6 pb-6">
-      <div class="flex flex-col gap-2">
-        <Label for="name">{m.admin_info_name()}</Label>
-        <Input
-          id="name"
-          name="name"
-          bind:value={$form.name}
-          form="create-form"
-          required
-        />
-        {#if $errors.name}
-          <p class="text-destructive text-sm font-medium">{$errors.name}</p>
-        {/if}
-      </div>
-
       <form
-        id="create-form"
         method="POST"
         action="?/create"
         use:enhance
         class="flex flex-col gap-6"
       >
-        <div class="flex items-center justify-between">
-          <Label>{m.admin_info_content()}</Label>
-          <ButtonGroup.Root>
-            <Button
-              type="button"
-              size="sm"
-              variant={activeTab === "sv" ? "rosa" : "outline"}
-              onclick={() => (activeTab = "sv")}
-            >
-              {m.language_swedish()}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant={activeTab === "en" ? "rosa" : "outline"}
-              onclick={() => (activeTab = "en")}
-            >
-              {m.language_english()}
-            </Button>
-          </ButtonGroup.Root>
-        </div>
-        <div class={activeTab === "sv" ? "block" : "hidden"}>
-          <Editor
-            name="markdownSv"
-            bind:value={$form.markdownSv}
-            aria-invalid={!!$errors.markdownSv}
-          />
-          {#if $errors.markdownSv}
-            <p class="text-destructive text-sm font-medium">
-              {$errors.markdownSv}
-            </p>
+        <div class="flex flex-col gap-2">
+          <Label for="name">{m.admin_info_name()}</Label>
+          <Input id="name" name="name" bind:value={$form.name} required />
+          {#if $errors.name}
+            <p class="text-destructive text-sm font-medium">{$errors.name}</p>
           {/if}
         </div>
-        <div class={activeTab === "en" ? "block" : "hidden"}>
-          <Editor
-            name="markdownEn"
-            bind:value={$form.markdownEn}
-            aria-invalid={!!$errors.markdownEn}
+
+        <div class="flex flex-col gap-2">
+          <Label for="titleSv">{m.info_edit_title_sv()}</Label>
+          <Input
+            id="titleSv"
+            name="titleSv"
+            bind:value={$form.titleSv}
+            required
           />
-          {#if $errors.markdownEn}
+          {#if $errors.titleSv}
             <p class="text-destructive text-sm font-medium">
-              {$errors.markdownEn}
+              {$errors.titleSv}
             </p>
           {/if}
         </div>
 
-        <div class="mt-4 flex items-center justify-end">
+        <div class="flex flex-col gap-2">
+          <Label for="titleEn">{m.info_edit_title_en()}</Label>
+          <Input id="titleEn" name="titleEn" bind:value={$form.titleEn} />
+          {#if $errors.titleEn}
+            <p class="text-destructive text-sm font-medium">
+              {$errors.titleEn}
+            </p>
+          {/if}
+        </div>
+
+        <div class="flex items-center justify-end">
           <Button
             type="submit"
             disabled={$delayed}

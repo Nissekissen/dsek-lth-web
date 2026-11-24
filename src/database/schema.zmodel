@@ -562,6 +562,63 @@ model Markdown {
     @@map("markdowns")
 }
 
+model InfoPage {
+    id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    slug      String        @unique @db.VarChar(255)
+    /// Other slugs that serve the same page. Uniqueness across pages is checked on save.
+    aliases   String[]      @default([])
+    titleSv   String        @map("title_sv") @db.VarChar(255)
+    titleEn   String?       @map("title_en") @db.VarChar(255)
+    createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+    updatedAt DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+    updatedBy String?       @map("updated_by") @db.Uuid
+    /// Bumped on every save, used to detect that someone else saved first
+    version   Int           @default(0)
+    sections  InfoSection[]
+
+    @@allow("read", true)
+    @@allow("create", has(auth().policies, "info:page:create"))
+    @@allow("update", has(auth().policies, "info:page:update"))
+    @@allow("delete", has(auth().policies, "info:page:delete"))
+    @@map("info_pages")
+}
+
+enum InfoSectionStyle {
+    hero
+    category
+    image_left   @map("image-left")
+    image_right  @map("image-right")
+    image_center @map("image-center")
+    text
+    footer
+
+    @@map("info_section_style")
+}
+
+model InfoSection {
+    id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    pageId     String           @map("page_id") @db.Uuid
+    page       InfoPage         @relation(fields: [pageId], references: [id], onDelete: Cascade)
+    /// 0..n-1, rewritten on every save
+    position   Int
+    style      InfoSectionStyle
+    headingSv  String?          @map("heading_sv")
+    headingEn  String?          @map("heading_en")
+    /// Markdown
+    bodySv     String?          @map("body_sv")
+    bodyEn     String?          @map("body_en")
+    image      String?
+    imageAltSv String?          @map("image_alt_sv")
+    imageAltEn String?          @map("image_alt_en")
+
+    @@allow("read", true)
+    @@allow("create", has(auth().policies, "info:page:update"))
+    @@allow("update", has(auth().policies, "info:page:update"))
+    @@allow("delete", has(auth().policies, "info:page:update"))
+    @@index([pageId, position])
+    @@map("info_sections")
+}
+
 
 model DrinkItem {
     id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
